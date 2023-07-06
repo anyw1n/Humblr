@@ -27,9 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,7 +40,7 @@ data class OnboardingUiState(
     val complete: Boolean = false
 )
 
-private val Images = listOf(
+private val images = listOf(
     R.drawable.onboarding_first,
     R.drawable.onboarding_second,
     R.drawable.onboarding_third
@@ -60,14 +57,8 @@ fun OnboardingScreen(complete: () -> Unit) {
         if (uiState.complete) complete()
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp)
-            .padding(top = 28.dp),
-        color = Palette.current.background
-    ) {
-        Column {
+    Surface(color = Palette.current.background) {
+        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp).padding(top = 28.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
                     modifier = Modifier.size(50.dp),
@@ -75,21 +66,14 @@ fun OnboardingScreen(complete: () -> Unit) {
                     color = Palette.current.primary
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                        painter = painterResource(id = R.drawable.app_icon),
                         contentDescription = null,
-                        modifier = Modifier.size(38.dp)
+                        modifier = Modifier.padding(all = 6.dp)
                     )
                 }
                 Text(
                     stringResource(id = R.string.app_name),
-                    fontWeight = FontWeight.Black,
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.montserrat_black,
-                            weight = FontWeight.Black
-                        )
-                    ),
-                    color = Palette.current.primary,
+                    style = TextStyles.appName,
                     modifier = Modifier.padding(start = 5.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -115,7 +99,7 @@ fun OnboardingScreen(complete: () -> Unit) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = Images[it]),
+                        painter = painterResource(id = images[it]),
                         contentDescription = null
                     )
                     Text(

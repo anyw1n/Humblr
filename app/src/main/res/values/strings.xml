@@ -2,6 +2,10 @@
     <string name="app_name">Humblr</string>
     <string name="skip">Пропустить</string>
     <string name="ready">Готово</string>
+    <string name="app_description">Найди единомышленников с Humblr</string>
+    <string name="search">Поиск</string>
+    <string name="new_subreddit">Новое</string>
+    <string name="popular">Популярное</string>
     <string-array name="onboarding_title">
         <item>Добро пожаловать в Humblr</item>
         <item>SubHumblr</item>
@@ -12,4 +16,6 @@
         <item>Ты можешь найти новые сабы по интересам и посмотреть сабы, на которые подписан</item>
         <item>Вкладка избранное хранит закладки с комментариями и сабами. В профиле ты найдёшь информацию о себе.</item>
     </string-array>
+    <string name="retry">Повторить</string>
+    <string name="no_items_found">Ничего не найдено</string>
 </resources>

@@ -3,7 +3,9 @@ package com.example.humblr.data
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CredentialsRepository @Inject constructor(
     private val prefs: SharedPreferences
 ) {
@@ -17,6 +19,7 @@ class CredentialsRepository @Inject constructor(
             return _token
         }
         set(value) {
+            println(value)
             _token = value
             prefs.edit { putString(Key, value) }
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.humblr.data.room.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,10 +16,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DiModule {
 
-//    @Singleton
-//    @Provides
-//    fun provideApiService(credentialsRepository: CredentialsRepository) =
-//        Api.create(credentialsRepository)
+    @Singleton
+    @Provides
+    fun provideApiService(credentialsRepository: CredentialsRepository) =
+        Api.create(credentialsRepository)
 
     @Singleton
     @Provides
@@ -31,7 +32,7 @@ class DiModule {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-//    @Singleton
-//    @Provides
-//    fun provideDatabase(@ApplicationContext context: Context) = AppDatabase.create(context)
+    @Singleton
+    @Provides
+    fun provideDatabase(@ApplicationContext context: Context) = AppDatabase.create(context)
 }
