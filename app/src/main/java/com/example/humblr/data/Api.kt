@@ -44,10 +44,19 @@ interface Api {
         @Query("sr_name") subredditName: String
     )
 
-    @GET("comments/{id}")
+    @GET("comments/{id}?depth=1")
     suspend fun getComments(
         @Path("id") id: String
     ): List<Response<Listing<Response<Thing>>>>
+
+    @POST("api/save")
+    suspend fun save(@Query("id") name: String)
+
+    @POST("api/unsave")
+    suspend fun unsave(@Query("id") name: String)
+
+    @POST("api/vote")
+    suspend fun vote(@Query("id") name: String, @Query("dir") direction: Int)
 
     companion object {
         private const val BaseUrl = "https://oauth.reddit.com/"
@@ -58,7 +67,7 @@ interface Api {
                 "&response_type=token" +
                 "&state=$ClientId" +
                 "&redirect_uri=$RedirectUri" +
-                "&scope=identity read subscribe mysubreddits"
+                "&scope=identity read subscribe mysubreddits save vote"
             ).toUri()
 
         fun create(credentialsRepository: CredentialsRepository) = with(Retrofit.Builder()) {
@@ -92,25 +101,32 @@ interface Api {
                             Thing::class.java,
                             JsonDeserializer { json, _, _ ->
                                 val obj = json.asJsonObject
-                                val kind = obj.get("name").asString
-                                if (kind.startsWith("t1")) {
+                                val kind = obj["name"].asString
+                                if (kind.startsWith("t1") && obj["count"] == null) {
+                                    val likes = obj["likes"]
                                     return@JsonDeserializer Comment(
-                                        author = obj.get("author").asString,
-                                        body = obj.get("body").asString,
-                                        createdUtc = obj.get("created_utc").asDouble,
-                                        score = obj.get("score").asInt
+                                        name = obj["name"].asString,
+                                        author = obj["author"].asString,
+                                        body = obj["body"].asString,
+                                        created = obj["created"].asDouble,
+                                        score = obj["score"].asInt,
+                                        likes = if (likes.isJsonNull) null else likes.asBoolean,
+                                        saved = obj["saved"].asBoolean
                                     )
                                 } else if (kind.startsWith("t3")) {
                                     return@JsonDeserializer Subreddit(
-                                        name = obj.get("name").asString,
-                                        id = obj.get("id").asString,
-                                        title = obj.get("title").asString,
-                                        noFollow = obj.get("no_follow").asBoolean,
-                                        selftext = obj.get("selftext").asString,
-                                        url = obj.get("url").asString,
-                                        author = obj.get("author").asString,
-                                        numComments = obj.get("num_comments").asInt,
-                                        subreddit = obj.get("subreddit").asString
+                                        name = obj["name"].asString,
+                                        id = obj["id"].asString,
+                                        title = obj["title"].asString,
+                                        noFollow = obj["no_follow"].asBoolean,
+                                        selftext = obj["selftext"].asString,
+                                        url = obj["url"].asString,
+                                        author = obj["author"].asString,
+                                        numComments = obj["num_comments"].asInt,
+                                        subreddit = obj["subreddit"].asString,
+                                        created = obj["created"].asDouble,
+                                        ups = obj["ups"].asInt,
+                                        saved = obj["saved"].asBoolean
                                     )
                                 }
                                 return@JsonDeserializer null

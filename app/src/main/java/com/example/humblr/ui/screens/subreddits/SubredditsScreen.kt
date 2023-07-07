@@ -116,7 +116,7 @@ fun SubredditsScreen(showSnackbar: (String) -> Unit, onSubredditClick: (String) 
         LazyColumn(modifier = Modifier.padding(top = 10.dp)) {
             items(
                 count = subreddits.itemCount,
-                key = subreddits.itemKey(key = { it.title }),
+                key = subreddits.itemKey(key = { it.name }),
                 contentType = subreddits.itemContentType()
             ) { index ->
                 subreddits[index]?.let {

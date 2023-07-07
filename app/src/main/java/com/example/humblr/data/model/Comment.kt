@@ -1,8 +1,11 @@
 package com.example.humblr.data.model
 
 data class Comment(
+    val name: String,
     val author: String,
     val body: String,
-    val createdUtc: Double,
-    val score: Int
+    val created: Double,
+    val score: Int,
+    val likes: Boolean?,
+    val saved: Boolean
 ) : Thing()

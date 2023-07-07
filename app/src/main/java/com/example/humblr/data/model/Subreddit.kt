@@ -13,5 +13,8 @@ data class Subreddit(
     val url: String,
     val author: String,
     val numComments: Int,
-    val subreddit: String
+    val subreddit: String,
+    val created: Double,
+    val ups: Int,
+    val saved: Boolean
 ) : Thing()

@@ -37,7 +37,9 @@ class SubredditsViewModel @Inject constructor(
         )
     }
 
-    fun subscribed() { uiState = uiState.copy(joinSubredditIndex = null) }
+    fun subscribed() {
+        uiState = uiState.copy(joinSubredditIndex = null)
+    }
 
     fun errorShown() {
         uiState = uiState.copy(error = null)

@@ -18,4 +18,5 @@
     </string-array>
     <string name="retry">Повторить</string>
     <string name="no_items_found">Ничего не найдено</string>
+    <string name="download">Скачать</string>
 </resources>

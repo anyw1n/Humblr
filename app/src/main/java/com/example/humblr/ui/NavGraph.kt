@@ -16,6 +16,7 @@ import com.example.humblr.ui.screens.favorite.FavoriteScreen
 import com.example.humblr.ui.screens.login.LoginScreen
 import com.example.humblr.ui.screens.onboarding.OnboardingScreen
 import com.example.humblr.ui.screens.profile.ProfileScreen
+import com.example.humblr.ui.screens.subreddit.SubredditScreen
 import com.example.humblr.ui.screens.subreddits.SubredditsScreen
 import com.example.humblr.util.RedirectUri
 
@@ -66,7 +67,7 @@ fun NavGraph(
             composable(
                 route = SubredditsRoutes.SubredditRoute + "/{${SubredditsRoutes.SubredditId}}"
             ) {
-                SubredditScreen(showSnackbar)
+                SubredditScreen(showSnackbar, navController::navigateUp)
             }
             composable(route = HomeTabs.Favorite.route) {
                 FavoriteScreen(showSnackbar)
