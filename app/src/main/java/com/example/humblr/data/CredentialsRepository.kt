@@ -16,10 +16,10 @@ class CredentialsRepository @Inject constructor(
             if (_token == null) {
                 _token = prefs.getString(Key, null)
             }
+            println(_token)
             return _token
         }
         set(value) {
-            println(value)
             _token = value
             prefs.edit { putString(Key, value) }
         }

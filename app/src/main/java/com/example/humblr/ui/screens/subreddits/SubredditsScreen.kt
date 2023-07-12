@@ -2,6 +2,7 @@ package com.example.humblr.ui.screens.subreddits
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -67,6 +68,10 @@ sealed class SubredditsType {
     data class Search(val query: String) : SubredditsType() {
         override val title = R.string.search
     }
+
+    data class Saved(val username: String) : SubredditsType() {
+        override val title = R.string.saved
+    }
 }
 
 @Composable
@@ -99,7 +104,11 @@ fun SubredditsScreen(showSnackbar: (String) -> Unit, onSubredditClick: (String) 
                         color = if (uiState.type == it) {
                             Palette.current.primary
                         } else {
-                            Color.Black.copy(alpha = 0.5f)
+                            if (isSystemInDarkTheme()) {
+                                Color.White
+                            } else {
+                                Color.Black.copy(alpha = 0.5f)
+                            }
                         },
                         fontWeight = if (uiState.type == it) FontWeight.Bold else FontWeight.Normal,
                         textAlign = TextAlign.Center
@@ -173,11 +182,20 @@ private fun SearchBar(onSearch: (String) -> Unit) {
             focusManager.clearFocus()
         }),
         shape = RoundedCornerShape(50),
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color.White,
-            unfocusedIndicatorColor = Palette.current.primary,
-            focusedContainerColor = Color.White,
-            focusedIndicatorColor = Palette.current.primary
-        )
+        colors = if (isSystemInDarkTheme()) {
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = Palette.current.background,
+                unfocusedIndicatorColor = Palette.current.primary,
+                focusedContainerColor = Palette.current.background,
+                focusedIndicatorColor = Palette.current.primary
+            )
+        } else {
+            TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                unfocusedIndicatorColor = Palette.current.primary,
+                focusedContainerColor = Color.White,
+                focusedIndicatorColor = Palette.current.primary
+            )
+        }
     )
 }

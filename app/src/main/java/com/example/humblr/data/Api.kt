@@ -6,6 +6,7 @@ import com.example.humblr.data.model.Listing
 import com.example.humblr.data.model.Response
 import com.example.humblr.data.model.Subreddit
 import com.example.humblr.data.model.Thing
+import com.example.humblr.data.model.User
 import com.example.humblr.util.RedirectUri
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
@@ -58,6 +59,28 @@ interface Api {
     @POST("api/vote")
     suspend fun vote(@Query("id") name: String, @Query("dir") direction: Int)
 
+    @GET("user/{username}/about")
+    suspend fun getUser(@Path("username") username: String): Response<User>
+
+    @GET("user/{username}/comments")
+    suspend fun getUserComments(
+        @Path("username") username: String,
+        @Query("after") after: String?
+    ): Response<Listing<Response<Comment>>>
+
+    @GET("user/{username}/saved")
+    suspend fun getUserSaved(
+        @Path("username") username: String,
+        @Query("type") type: String,
+        @Query("after") after: String?
+    ): Response<Listing<Response<Thing>>>
+
+    @GET("api/v1/me")
+    suspend fun getMe(): Me
+
+    @GET("api/v1/me/friends")
+    suspend fun getFriends(@Query("after") after: String?): Response<Listing<Response<User>>>
+
     companion object {
         private const val BaseUrl = "https://oauth.reddit.com/"
         private const val ClientId = "ivpy98FD40P7MW7_uwZO2A"
@@ -67,7 +90,7 @@ interface Api {
                 "&response_type=token" +
                 "&state=$ClientId" +
                 "&redirect_uri=$RedirectUri" +
-                "&scope=identity read subscribe mysubreddits save vote"
+                "&scope=identity read subscribe mysubreddits save vote history"
             ).toUri()
 
         fun create(credentialsRepository: CredentialsRepository) = with(Retrofit.Builder()) {

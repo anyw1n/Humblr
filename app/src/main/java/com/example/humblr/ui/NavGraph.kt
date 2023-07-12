@@ -10,14 +10,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import com.example.humblr.ui.common.HomeTabs
+import com.example.humblr.ui.common.ProfileRoutes
 import com.example.humblr.ui.common.SubredditsRoutes
 import com.example.humblr.ui.screens.auth.AuthScreen
 import com.example.humblr.ui.screens.favorite.FavoriteScreen
+import com.example.humblr.ui.screens.friends.FriendsScreen
 import com.example.humblr.ui.screens.login.LoginScreen
 import com.example.humblr.ui.screens.onboarding.OnboardingScreen
 import com.example.humblr.ui.screens.profile.ProfileScreen
 import com.example.humblr.ui.screens.subreddit.SubredditScreen
 import com.example.humblr.ui.screens.subreddits.SubredditsScreen
+import com.example.humblr.ui.screens.user.UserScreen
 import com.example.humblr.util.RedirectUri
 
 object MainDestinations {
@@ -67,13 +70,34 @@ fun NavGraph(
             composable(
                 route = SubredditsRoutes.SubredditRoute + "/{${SubredditsRoutes.SubredditId}}"
             ) {
-                SubredditScreen(showSnackbar, navController::navigateUp)
+                SubredditScreen(showSnackbar, navController::navigateUp) {
+                    navController.navigate(SubredditsRoutes.UserRoute + "/$it")
+                }
+            }
+            composable(
+                route = SubredditsRoutes.UserRoute + "/{${SubredditsRoutes.Username}}"
+            ) {
+                UserScreen(showSnackbar)
             }
             composable(route = HomeTabs.Favorite.route) {
-                FavoriteScreen(showSnackbar)
+                FavoriteScreen(
+                    showSnackbar,
+                    { navController.navigate(SubredditsRoutes.SubredditRoute + "/$it") }
+                ) {
+                    navController.navigate(SubredditsRoutes.UserRoute + "/$it")
+                }
             }
             composable(route = HomeTabs.Profile.route) {
-                ProfileScreen(showSnackbar)
+                ProfileScreen(showSnackbar, {
+                    navController.navigate(ProfileRoutes.FriendsRoute)
+                }) {
+                    navController.navigate(MainDestinations.LoginRoute) { popUpTo(0) }
+                }
+            }
+            composable(route = ProfileRoutes.FriendsRoute) {
+                FriendsScreen(navController::navigateUp) {
+                    navController.navigate(SubredditsRoutes.UserRoute + "/$it")
+                }
             }
         }
     }

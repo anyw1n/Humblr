@@ -19,4 +19,11 @@
     <string name="retry">Повторить</string>
     <string name="no_items_found">Ничего не найдено</string>
     <string name="download">Скачать</string>
+    <string name="subreddits">Сабреддиты</string>
+    <string name="comments">Комментарии</string>
+    <string name="all">Все</string>
+    <string name="saved">Сохраненные</string>
+    <string name="logout">Выйти</string>
+    <string name="clear_saved">Очистить сохранённые</string>
+    <string name="friends_list">Список друзей</string>
 </resources>

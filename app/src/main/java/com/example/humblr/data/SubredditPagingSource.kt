@@ -14,11 +14,13 @@ class SubredditPagingSource(
         state.anchorPosition?.let { state.closestItemToPosition(it)?.name }
 
     override suspend fun load(params: LoadParams<String>) = runCatching {
+        val after = if (params !is LoadParams.Refresh) params.key else null
         val subreddits = when (type) {
-            SubredditsType.Popular -> api.getPopularSubreddits(params.key)
-            SubredditsType.New -> api.getNewSubreddits(params.key)
-            is SubredditsType.Search -> api.searchSubreddits(params.key, type.query)
-        }.data.children.map { it.data }
+            SubredditsType.Popular -> api.getPopularSubreddits(after)
+            SubredditsType.New -> api.getNewSubreddits(after)
+            is SubredditsType.Search -> api.searchSubreddits(after, type.query)
+            is SubredditsType.Saved -> api.getUserSaved(type.username, "links", after)
+        }.data.children.map { it.data as Subreddit }
         LoadResult.Page(
             data = subreddits,
             prevKey = null,

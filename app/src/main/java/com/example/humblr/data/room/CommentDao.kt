@@ -5,13 +5,13 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.humblr.data.model.Subreddit
+import com.example.humblr.data.model.Comment
 
 @Dao
-interface SubredditDao {
+interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(subreddit: Subreddit)
+    suspend fun insert(comment: Comment)
 
-    @Query("SELECT * FROM subreddits")
-    fun pagingSource(): PagingSource<Int, Subreddit>
+    @Query("SELECT * FROM comments")
+    fun pagingSource(): PagingSource<Int, Comment>
 }

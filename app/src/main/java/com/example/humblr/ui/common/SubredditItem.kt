@@ -2,6 +2,7 @@ package com.example.humblr.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,12 +41,14 @@ fun SubredditItem(subreddit: Subreddit, onSubscribe: () -> Unit, onClick: (Strin
 
     Surface(
         shape = RoundedCornerShape(5.dp),
-        color = Color.White,
+        color = if (isSystemInDarkTheme()) Palette.current.background else Color.White,
         modifier = Modifier.clickable { expanded = !expanded }
     ) {
         Column {
             Row(
-                modifier = Modifier.padding(vertical = 19.dp).padding(start = 12.dp, end = 22.dp),
+                modifier = Modifier
+                    .padding(vertical = 19.dp)
+                    .padding(start = 12.dp, end = 22.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f)) {
@@ -62,7 +65,9 @@ fun SubredditItem(subreddit: Subreddit, onSubscribe: () -> Unit, onClick: (Strin
                                 }
                                 ).copy(alpha = 0.2f)
                         ),
-                        modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
                     )
                     Text(
                         text = subreddit.title,
@@ -95,12 +100,15 @@ fun SubredditItem(subreddit: Subreddit, onSubscribe: () -> Unit, onClick: (Strin
                     AsyncImage(
                         model = subreddit.url,
                         contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp, end = 22.dp).fillMaxWidth()
+                        modifier = Modifier
+                            .padding(start = 12.dp, end = 22.dp)
+                            .fillMaxWidth()
                     )
                 } else if (!subreddit.url.endsWith("jpg")) {
                     MarkdownText(
                         markdown = subreddit.selftext,
                         style = TextStyles.default,
+                        color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                         modifier = Modifier.padding(start = 12.dp, end = 22.dp)
                     )
                 } else {
@@ -109,17 +117,22 @@ fun SubredditItem(subreddit: Subreddit, onSubscribe: () -> Unit, onClick: (Strin
                             model = subreddit.url,
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.padding(start = 12.dp).size(75.dp)
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                                .size(75.dp)
                         )
                         MarkdownText(
                             markdown = subreddit.selftext,
                             style = TextStyles.default,
+                            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                             modifier = Modifier.padding(start = 8.dp, end = 22.dp)
                         )
                     }
                 }
                 Row(
-                    modifier = Modifier.padding(start = 12.dp, end = 22.dp).padding(top = 19.dp),
+                    modifier = Modifier
+                        .padding(start = 12.dp, end = 22.dp)
+                        .padding(top = 19.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -139,7 +152,9 @@ fun SubredditItem(subreddit: Subreddit, onSubscribe: () -> Unit, onClick: (Strin
                             painter = painterResource(id = R.drawable.comments),
                             contentDescription = null,
                             tint = Palette.current.primary,
-                            modifier = Modifier.size(16.dp).padding(start = 4.dp)
+                            modifier = Modifier
+                                .size(16.dp)
+                                .padding(start = 4.dp)
                         )
                     }
                 }

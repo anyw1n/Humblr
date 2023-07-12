@@ -37,7 +37,7 @@ fun LoginScreen(login: () -> Unit) {
                 brush = Brush.verticalGradient(
                     colors = listOf(
                         Palette.current.primary,
-                        Color.White
+                        Palette.current.background
                     ),
                     endY = with(LocalDensity.current) { 444.dp.toPx() }
                 )

@@ -21,7 +21,7 @@ class SubredditsViewModel @Inject constructor(
     var uiState by mutableStateOf(SubredditsUiState())
         private set
 
-    val subreddits get() = repository.getSubredditsFlow(uiState.type).cachedIn(viewModelScope)
+    val subreddits get() = repository.getAllSubredditsFlow(uiState.type).cachedIn(viewModelScope)
 
     fun changeType(type: SubredditsType) {
         uiState = uiState.copy(type = type)

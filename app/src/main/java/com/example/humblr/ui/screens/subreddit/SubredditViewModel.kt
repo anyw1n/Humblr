@@ -7,6 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.humblr.data.Api
+import com.example.humblr.data.CommentRepository
+import com.example.humblr.data.SubredditRepository
 import com.example.humblr.data.model.Comment
 import com.example.humblr.data.model.Subreddit
 import com.example.humblr.ui.common.SubredditsRoutes
@@ -17,6 +19,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class SubredditViewModel @Inject constructor(
     private val api: Api,
+    private val subredditRepository: SubredditRepository,
+    private val commentRepository: CommentRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val id: String = savedStateHandle[SubredditsRoutes.SubredditId]!!
@@ -56,6 +60,17 @@ class SubredditViewModel @Inject constructor(
         )
     }
 
+    fun saveSubreddit() = viewModelScope.launch {
+        val subreddit = uiState.subreddit ?: return@launch
+        runCatching { api.save(subreddit.name) }.fold(
+            onSuccess = {
+                subredditRepository.save(subreddit)
+                loadSubreddit()
+            },
+            onFailure = { uiState = uiState.copy(error = it.localizedMessage ?: "Ошибка") }
+        )
+    }
+
     fun save(name: String) = viewModelScope.launch {
         runCatching { api.save(name) }.fold(
             onSuccess = { loadSubreddit() },
@@ -76,6 +91,8 @@ class SubredditViewModel @Inject constructor(
             onFailure = { uiState = uiState.copy(error = it.localizedMessage ?: "Ошибка") }
         )
     }
+
+    fun download(comment: Comment) = viewModelScope.launch { commentRepository.save(comment) }
 
     fun errorShown() {
         uiState = uiState.copy(error = null)

@@ -19,4 +19,10 @@ object HomeDestinations {
 object SubredditsRoutes {
     const val SubredditRoute = HomeDestinations.SubredditsRoute + "/subreddit"
     const val SubredditId = "subredditId"
+    const val UserRoute = HomeDestinations.SubredditsRoute + "/user"
+    const val Username = "username"
+}
+
+object ProfileRoutes {
+    const val FriendsRoute = HomeDestinations.ProfileRoute + "/friends"
 }

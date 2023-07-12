@@ -2,6 +2,7 @@ package com.example.humblr.ui.screens.subreddit
 
 import android.content.Intent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,7 +52,11 @@ data class SubredditUiState(
 )
 
 @Composable
-fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
+fun SubredditScreen(
+    showSnackbar: (String) -> Unit,
+    navigateUp: () -> Unit,
+    onUserClick: (String) -> Unit
+) {
     val viewModel = hiltViewModel<SubredditViewModel>()
     val uiState = viewModel.uiState
 
@@ -74,7 +79,12 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
         val subreddit = uiState.subreddit ?: return@Column
         val listState = rememberLazyListState()
         val scope = rememberCoroutineScope()
-        Surface(modifier = Modifier.fillMaxWidth().height(53.dp), color = Palette.current.primary) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(53.dp),
+            color = Palette.current.primary
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = navigateUp) {
                     Icon(
@@ -108,7 +118,7 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
             item {
                 Surface(
                     shape = RoundedCornerShape(5.dp),
-                    color = Color.White
+                    color = if (isSystemInDarkTheme()) Palette.current.background else Color.White
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 18.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -128,7 +138,9 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                         Palette.current.secondary
                                     }
                                     ).copy(alpha = 0.5f),
-                                modifier = Modifier.size(14.dp).clickable { viewModel.subscribe() }
+                                modifier = Modifier
+                                    .size(14.dp)
+                                    .clickable { viewModel.subscribe() }
                             )
                             Text(
                                 text = subreddit.author,
@@ -140,17 +152,24 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                 text = SimpleDateFormat.getTimeInstance()
                                     .format(Date(subreddit.created.toLong())),
                                 style = TextStyles.default.copy(
-                                    color = Color.Black.copy(alpha = 0.5f)
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(alpha = 0.5f)
+                                    }
                                 )
                             )
                         }
                         AsyncImage(
                             model = subreddit.url,
                             contentDescription = null,
-                            modifier = Modifier.fillMaxWidth().padding(top = 21.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 21.dp)
                         )
                         MarkdownText(
                             markdown = subreddit.selftext,
+                            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
                             style = TextStyles.default
                         )
                         Row(
@@ -160,7 +179,13 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                             Text(
                                 text = "${subreddit.numComments} комментария",
                                 style = TextStyles.default.copy(
-                                    color = Color.Black.copy(alpha = 0.5f)
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(
+                                            alpha = 0.5f
+                                        )
+                                    }
                                 )
                             )
                             Spacer(modifier = Modifier.weight(1f))
@@ -168,7 +193,13 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                             Text(
                                 text = "Поделиться",
                                 style = TextStyles.default.copy(
-                                    color = Color.Black.copy(alpha = 0.5f)
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(
+                                            alpha = 0.5f
+                                        )
+                                    }
                                 ),
                                 modifier = Modifier.clickable {
                                     val intent = Intent().apply {
@@ -182,7 +213,13 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                             Text(
                                 text = subreddit.ups.toString(),
                                 style = TextStyles.default.copy(
-                                    color = Color.Black.copy(alpha = 0.5f)
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(
+                                            alpha = 0.5f
+                                        )
+                                    }
                                 ),
                                 modifier = Modifier.padding(start = 16.dp)
                             )
@@ -190,17 +227,31 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                 Icon(
                                     Icons.Filled.Favorite,
                                     contentDescription = null,
-                                    tint = Color.Black.copy(alpha = 0.5f),
-                                    modifier = Modifier.size(15.dp).padding(start = 2.dp)
+                                    tint = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(alpha = 0.5f)
+                                    },
+                                    modifier = Modifier
+                                        .size(15.dp)
+                                        .padding(start = 2.dp)
                                         .clickable { viewModel.unsave(subreddit.name) }
                                 )
                             } else {
                                 Icon(
                                     painter = painterResource(id = R.drawable.favorite),
                                     contentDescription = null,
-                                    tint = Color.Black.copy(alpha = 0.5f),
-                                    modifier = Modifier.size(15.dp).padding(start = 2.dp)
-                                        .clickable { viewModel.save(subreddit.name) }
+                                    tint = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(
+                                            alpha = 0.5f
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .size(15.dp)
+                                        .padding(start = 2.dp)
+                                        .clickable { viewModel.saveSubreddit() }
                                 )
                             }
                         }
@@ -212,19 +263,24 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                 Surface(
                     modifier = Modifier.padding(top = 11.dp),
                     shape = RoundedCornerShape(5.dp),
-                    color = Color.White
+                    color = if (isSystemInDarkTheme()) Palette.current.background else Color.White
                 ) {
                     Column(modifier = Modifier.padding(start = 14.dp, end = 21.dp)) {
                         Row(modifier = Modifier.padding(top = 7.dp)) {
                             Text(
                                 text = it.author,
-                                style = TextStyles.title.copy(color = Palette.current.primary)
+                                style = TextStyles.title.copy(color = Palette.current.primary),
+                                modifier = Modifier.clickable { onUserClick(it.author) }
                             )
                             Text(
                                 text = SimpleDateFormat.getTimeInstance()
                                     .format(Date(it.created.toLong())),
                                 style = TextStyles.default.copy(
-                                    color = Color.Black.copy(alpha = 0.5f)
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(alpha = 0.5f)
+                                    }
                                 ),
                                 modifier = Modifier.padding(start = 16.dp)
                             )
@@ -247,15 +303,29 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                     }
                                 ),
                                 contentDescription = null,
-                                tint = Color.Black.copy(alpha = 0.5f),
-                                modifier = Modifier.size(12.dp).clickable {
-                                    viewModel.vote(it.name, if (it.likes == true) 0 else 1)
-                                }
+                                tint = if (isSystemInDarkTheme()) {
+                                    Color.White
+                                } else {
+                                    Color.Black.copy(
+                                        alpha = 0.5f
+                                    )
+                                },
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .clickable {
+                                        viewModel.vote(it.name, if (it.likes == true) 0 else 1)
+                                    }
                             )
                             Text(
                                 text = it.score.toString(),
                                 style = TextStyles.default.copy(
-                                    color = Color.Black.copy(alpha = 0.5f)
+                                    color = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(
+                                            alpha = 0.5f
+                                        )
+                                    }
                                 ),
                                 modifier = Modifier.padding(horizontal = 2.dp)
                             )
@@ -268,26 +338,44 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                     }
                                 ),
                                 contentDescription = null,
-                                tint = Color.Black.copy(alpha = 0.5f),
-                                modifier = Modifier.size(12.dp).clickable {
-                                    viewModel.vote(it.name, if (it.likes == false) 0 else -1)
-                                }
+                                tint = if (isSystemInDarkTheme()) {
+                                    Color.White
+                                } else {
+                                    Color.Black.copy(
+                                        alpha = 0.5f
+                                    )
+                                },
+                                modifier = Modifier
+                                    .size(12.dp)
+                                    .clickable {
+                                        viewModel.vote(it.name, if (it.likes == false) 0 else -1)
+                                    }
                             )
                             Row(
-                                modifier = Modifier.padding(start = 16.dp).clickable { },
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .clickable { viewModel.download(it) },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.download),
                                     contentDescription = null,
-                                    tint = Color.Black.copy(alpha = 0.5f),
+                                    tint = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(alpha = 0.5f)
+                                    },
                                     modifier = Modifier.size(13.dp)
                                 )
                                 Text(
                                     text = stringResource(R.string.download),
                                     modifier = Modifier.padding(start = 2.dp),
                                     style = TextStyles.default.copy(
-                                        color = Color.Black.copy(alpha = 0.5f)
+                                        color = if (isSystemInDarkTheme()) {
+                                            Color.White
+                                        } else {
+                                            Color.Black.copy(alpha = 0.5f)
+                                        }
                                     )
                                 )
                             }
@@ -296,7 +384,11 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                 Icon(
                                     Icons.Filled.Favorite,
                                     contentDescription = null,
-                                    tint = Color.Black.copy(alpha = 0.5f),
+                                    tint = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(alpha = 0.5f)
+                                    },
                                     modifier = Modifier
                                         .size(12.dp)
                                         .clickable { viewModel.unsave(it.name) }
@@ -305,7 +397,11 @@ fun SubredditScreen(showSnackbar: (String) -> Unit, navigateUp: () -> Unit) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.favorite),
                                     contentDescription = null,
-                                    tint = Color.Black.copy(alpha = 0.5f),
+                                    tint = if (isSystemInDarkTheme()) {
+                                        Color.White
+                                    } else {
+                                        Color.Black.copy(alpha = 0.5f)
+                                    },
                                     modifier = Modifier
                                         .size(12.dp)
                                         .clickable { viewModel.save(it.name) }
